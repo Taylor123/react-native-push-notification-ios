@@ -361,11 +361,29 @@ RCT_EXPORT_METHOD(checkPermissions:(RCTResponseSenderBlock)callback)
   }
   
   NSUInteger types = [RCTSharedApplication() currentUserNotificationSettings].types;
-  callback(@[@{
-               @"alert": @((types & UIUserNotificationTypeAlert) > 0),
-               @"badge": @((types & UIUserNotificationTypeBadge) > 0),
-               @"sound": @((types & UIUserNotificationTypeSound) > 0),
-               }]);
+  UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+  [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
+    NSString *status = @"undetermined";
+    switch(settings.authorizationStatus) {
+      case UNAuthorizationStatusDenied:
+        status = @"denied";
+        break;
+      case UNAuthorizationStatusAuthorized:
+        status = @"authorized";
+        break;
+      case UNAuthorizationStatusProvisional:
+        status = @"provisional";
+        break;
+      default:
+        break;
+    }
+    callback(@[@{
+         @"alert": @((types & UIUserNotificationTypeAlert) > 0),
+         @"badge": @((types & UIUserNotificationTypeBadge) > 0),
+         @"sound": @((types & UIUserNotificationTypeSound) > 0),
+         @"status": status,
+    }]);
+  }];
 }
 
 RCT_EXPORT_METHOD(presentLocalNotification:(UILocalNotification *)notification)
