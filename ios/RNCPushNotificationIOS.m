@@ -482,6 +482,12 @@ RCT_EXPORT_METHOD(getDeliveredNotifications:(RCTResponseSenderBlock)callback)
   }
 }
 
+RCT_EXPORT_METHOD(navigateToSettings)
+{
+  NSURL *settingsUrl = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+  [RCTSharedApplication() openURL:settingsUrl options:@{} completionHandler:nil];
+}
+
 #else //TARGET_OS_TV
 
 - (NSArray<NSString *> *)supportedEvents

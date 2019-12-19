@@ -448,6 +448,14 @@ class PushNotificationIOS {
   getThreadID(): ?string {
     return this._threadID;
   }
+
+  /**
+   * Navigate to applications settings
+   *
+   */
+  static navigateToSettings() {
+    RNCPushNotificationIOS.navigateToSettings();
+  }
 }
 
 module.exports = PushNotificationIOS;
